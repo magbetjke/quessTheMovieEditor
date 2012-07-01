@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<mx:WindowedApplication xmlns:views="views.*"
+                        width="1024" height="768"
+                        creationComplete="creationCompleteHandler(event)" xmlns:mx="http://www.adobe.com/2006/mxml">
+    <mx:Style source="skins/AeonGraphical.css" />
+
+    <mx:TabNavigator id="mainTabNav"
+                     width="100%"
+                     height="100%"
+                     paddingBottom="10"
+                     paddingRight="10"
+                     paddingLeft="10"
+                     tabHeight="30"
+                     tabWidth="{mainTabNav.width >> 1}">
+        <views:MovieEditorView label="MOVIE"/>
+
+        <views:GlobalEditorView label="GLOBAL"/>
+    </mx:TabNavigator>
+
+
+    <mx:Script><![CDATA[
+        import controllers.ConfigHandler;
+
+        import mx.controls.Alert;
+        import mx.core.FlexGlobals;
+        import mx.events.FlexEvent;
+
+        private function creationCompleteHandler(event:FlexEvent):void {
+            ConfigHandler.instance.init();
+            FlexGlobals.topLevelApplication = this;
+        }
+        ]]></mx:Script>
+</mx:WindowedApplication>

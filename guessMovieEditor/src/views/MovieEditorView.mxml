@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%" height="100%" creationComplete="creationCompleteHandler(event)">
+    <mx:HBox width="100%" height="100%">
+        <mx:VBox id="blocks" borderStyle="solid" borderColor="0x808080" width="40%" height="100%">
+            <mx:HBox width="100%" horizontalGap="0">
+                <mx:Label text="Blocks" fontSize="20" width="100%"/>
+                <mx:Button id="removeBlockBtn" 
+                           label="remove" 
+                           enabled="{blocksDG.selectedItem}"
+                           click="{BlocksController.instance.removeBlock(Block(blocksDG.selectedItem).id)}"/>
+                <mx:Button id="addBlockBtn" 
+                           label="add" 
+                           click="{BlocksController.instance.createBlock()}"/>
+            </mx:HBox>
+            <mx:DataGrid id="blocksDG"
+                         height="100%"
+                         width="100%"
+                         change="changeSlectedItemBlocksDG(event)"
+                         dataProvider="{_model.blocks/*{id: '0001', price: 0, resolvePrice: 0}*/}"
+                         editable="true">
+                <mx:columns>
+                    <mx:DataGridColumn dataField="id" editable="false" itemRenderer="renderers.BlockIdRenderer"/>
+                    <mx:DataGridColumn dataField="price" editable="true">
+                        <mx:itemEditor>
+                            <mx:Component>
+                                <mx:TextInput maxChars="4" restrict="[0-9]"/>
+                            </mx:Component>
+                        </mx:itemEditor>
+                    </mx:DataGridColumn>
+                    <mx:DataGridColumn dataField="resolvePrice" editable="true" headerText="resolve Price">
+                        <mx:itemEditor>
+                            <mx:Component>
+                                <mx:TextInput maxChars="3" restrict="[0-9]"/>
+                            </mx:Component>
+                        </mx:itemEditor>
+                    </mx:DataGridColumn>
+                    <mx:DataGridColumn dataField="count" editable="false"/>
+                </mx:columns>
+
+            </mx:DataGrid>
+        </mx:VBox>
+
+        <mx:VBox id="movies" borderStyle="solid" borderColor="0x808080" width="100%" height="100%">
+            <mx:HBox width="100%" horizontalGap="0">
+                <mx:Label text="Movies" fontSize="20" width="100%"/>
+                <mx:Button id="removeMovieBtn"
+                           label="remove"
+                           enabled="{moviesDG.selectedItem}"
+                           click="{BlocksController.instance.removeMovieFromBlock(Movie(moviesDG.selectedItem).id, Block(blocksDG.selectedItem).id)}"/>
+                <mx:Button id="addMovieBtn"
+                           label="add"
+                           click="{BlocksController.instance.addMovieToBlock(Block(blocksDG.selectedItem).id)}"/>
+            </mx:HBox>
+            <mx:AdvancedDataGrid id="moviesDG"
+                         height="100%"
+                         width="100%"
+                         mouseEnabled="true"
+                         doubleClickEnabled="true"
+                         styleFunction="moviesDGStyleFunc"
+                         itemDoubleClick="onDoubleClickMovie(event)"
+                         dataProvider="{Block(blocksDG.selectedItem).movies/*{id: '0001', price: 0, resolvePrice: 0, count: 0, valid: false}*/}">
+                <mx:columns>
+                    <mx:AdvancedDataGridColumn dataField="id" headerText="id"/>
+                    <mx:AdvancedDataGridColumn dataField="title" headerText="Title"/>
+                    <mx:AdvancedDataGridColumn dataField="frame" headerText="Frame"/>
+                    <mx:AdvancedDataGridColumn dataField="hint" headerText="Hint1"/>
+                    <mx:AdvancedDataGridColumn dataField="hint" headerText="Hint2"/>
+                    <mx:AdvancedDataGridColumn dataField="hint" headerText="Hint3"/>
+                </mx:columns>
+
+            </mx:AdvancedDataGrid>
+
+        </mx:VBox>
+    </mx:HBox>
+
+    <mx:Script><![CDATA[
+        import controllers.BlocksController;
+        import controllers.BlocksController;
+
+        import events.BlockEvent;
+
+        import models.Block;
+
+        import models.Model;
+        import models.Movie;
+
+        import mx.controls.Alert;
+        import mx.controls.TextInput;
+        import mx.events.DataGridEvent;
+        import mx.events.FlexEvent;
+        import mx.events.ListEvent;
+
+        import views.dialogs.DialogMovieEditor;
+
+        private var _model:Model = Model.instance;
+
+        private function onDoubleClickMovie(event:ListEvent):void {
+            var selectedRow:Object = event.currentTarget.selectedItem;
+            DialogMovieEditor.show(Movie(selectedRow));
+        }
+
+        private function creationCompleteHandler(event:FlexEvent):void {
+            BlocksController.instance.addEventListener(BlockEvent.COUNT_CHANGE, updateBlocksDG);
+            BlocksController.instance.addEventListener(BlockEvent.MOVIE_COUNT_CHANGE, updateMoviesDG);
+        }
+
+        private function updateMoviesDG(event:BlockEvent):void {
+            var block:Block = Block(blocksDG.selectedItem);
+            moviesDG.dataProvider = block.movies;
+        }
+
+        private function updateBlocksDG(event:BlockEvent):void {
+            blocksDG.dataProvider = _model.blocks;
+        }
+
+        public function moviesDGStyleFunc(data:Object, col:AdvancedDataGridColumn):Object {
+            if (!data.valid)
+                return {color:0xFF0000};
+            return null;
+        }
+
+        private function changeSlectedItemBlocksDG(event:ListEvent):void {
+            var block:Block = blocksDG.selectedItem as Block;
+            if (block) block.updateMovies();
+        }
+        ]]></mx:Script>
+</mx:VBox>

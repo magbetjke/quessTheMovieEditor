@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:fx="org.osmf.metadata.*"
+         width="100%"
+         height="100%"
+         borderStyle="solid"
+         borderColor="black" borderAlpha="1" borderVisible="true">
+    <mx:Metadata>
+        [Event(name="focusOut", type="flash.events.FocusEvent")]
+    </mx:Metadata>
+    <mx:Box backgroundColor="0x808080">
+        <mx:Label id="locale"
+                  text="{loc}"
+                  fontSize="25"
+                  fontWeight="bold"
+                  width="40"
+                  height="30"/>
+    </mx:Box>
+    <mx:TextArea id="textArea"
+                 borderStyle="none"
+                 width="100%"
+                 focusOut="dispatchEvent(new FocusEvent(FocusEvent.FOCUS_OUT))"
+                 height="{textMaxHeight}"
+                 text="{text}"
+                 change="{text = textArea.text}"
+                 maxChars="{textMaxChars}"/>
+    
+    <mx:Script><![CDATA[
+        import data.Locales;
+
+        [Bindable]
+        public var loc:String = Locales.EN;
+
+        [Bindable]
+        public var textMaxChars:int = 500;
+
+        [Bindable]
+        public var textMaxHeight:Number = 100;
+
+        [Bindable]
+        public var text:String = "";
+
+        ]]></mx:Script>
+</mx:HBox>

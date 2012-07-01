@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:comps="comps.*" width="100%" height="100%">
+
+    <mx:HBox>
+        <mx:Label text="film quantity per star"/>
+        <mx:TextInput id="filmQuantity"
+                      text="{_model.filmQuantityPerStar}"
+                      restrict="[0-9]"
+                      focusOut="{_model.filmQuantityPerStar = Number(filmQuantity.text)}"
+                      maxChars="1"/>
+    </mx:HBox>
+    <mx:HBox>
+        <mx:Label text="Quick answer time: K"/>
+        <mx:TextInput id="kInput"
+                      text="{_model.k}"
+                      focusOut="{_model.k = Number(kInput.text)}"
+                      restrict="[0-9]"
+                      maxChars="4"/>
+        <mx:Label text="+ L"/>
+        <mx:TextInput id="lInput"
+                      text="{_model.l}"
+                      focusOut="{_model.l = Number(lInput.text)}"
+                      restrict="[0-9]"
+                      maxChars="4"/>
+        <mx:Label text="* title_length"/>
+    </mx:HBox>
+    <mx:HBox>
+        <mx:Label text="default localization:"/>
+        <mx:ComboBox id="locale"
+                     selectedItem="{_model.defaultLocale}"
+                     change="{_model.defaultLocale = locale.text}"
+                     dataProvider="{[Locales.EN, Locales.RU]}"/>
+    </mx:HBox>
+
+    <mx:VBox id="howTos"
+             width="100%"
+             borderStyle="solid"
+             borderColor="black">
+        <comps:TextAreaWithLocale id="howtosEN"
+                                  loc="{Locales.EN}" 
+                                  text="{_model.howToPlay[Locales.EN]}"
+                                  focusOut="{_model.updateHowTo(Locales.EN, howtosEN.text)}"/>
+        <comps:TextAreaWithLocale id="howtosRU"
+                                  loc="{Locales.RU}"
+                                  text="{_model.howToPlay[Locales.RU]}"
+                                  focusOut="{_model.updateHowTo(Locales.RU, howtosRU.text)}"/>
+    </mx:VBox>
+
+    <mx:VBox id="credits"
+             width="100%"
+             borderStyle="solid"
+             borderColor="black">
+        <comps:TextAreaWithLocale id="creditsEN"
+                                  loc="{Locales.EN}" 
+                                  text="{_model.credits[Locales.EN]}"
+                                  focusOut="{_model.updateCredits(Locales.EN, creditsEN.text)}"/>
+        <comps:TextAreaWithLocale id="creditsRU"
+                                  loc="{Locales.RU}"
+                                  text="{_model.credits[Locales.RU]}"
+                                  focusOut="{_model.updateCredits(Locales.RU, creditsRU.text)}"/>
+    </mx:VBox>
+    <mx:Script><![CDATA[
+        import data.Locales;
+
+        import models.GlobalSettings;
+
+        import models.Model;
+
+        private var _model:GlobalSettings = Model.instance.globalSettings;
+
+        ]]></mx:Script>
+</mx:VBox>

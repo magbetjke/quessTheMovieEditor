@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" implements="mx.core.IDataRenderer">
+    <mx:DataGridColumn id="idCol" headerText="id"/>
+    <mx:DataGridColumn id="titleCol" headerText="title"/>
+    <mx:DataGridColumn id="frameCol" headerText="frame"/>
+    <mx:DataGridColumn id="hint1Col" headerText="hint1"/>
+    <mx:DataGridColumn id="hint2Col" headerText="hint2"/>
+    <mx:DataGridColumn id="hint3Col" headerText="hint3"/>
+    <mx:Script><![CDATA[
+        
+        override public function set data(value:Object):void {
+            super.data = value;
+            
+            titleCol.dataField = 'LEON';
+        }
+        ]]></mx:Script>
+    
+</mx:HBox>
